@@ -2,9 +2,7 @@ package com.claretiano.estoque.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,6 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "tb_product")
 public class Product {
     @Id
@@ -35,6 +35,7 @@ public class Product {
     private Category category;
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
+    private String nomeNormalizado;
 
     @PrePersist
     public void prePersist(){

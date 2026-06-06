@@ -69,6 +69,8 @@ public class ProductServiceImpl implements ProductService {
         produtosExistente.setPrice(productDTO.getPrice());
         produtosExistente.setQuantity(productDTO.getQuantity());
         produtosExistente.setMinStock(productDTO.getMinStock());
+        Category category = categoryService.buscarPorNome(productDTO.getCategoryName());
+        produtosExistente.setCategory(category);
 
         Product productAtualizado = productRepository.save(produtosExistente);
         return toResponseDTO(productAtualizado);
@@ -90,6 +92,7 @@ public class ProductServiceImpl implements ProductService {
                 .quantity(product.getQuantity())
                 .minStock(product.getMinStock())
                 .categoryName(product.getCategory().getName())
+                .lowStock(product.getQuantity() < product.getMinStock())
                 .build();
     }
 }

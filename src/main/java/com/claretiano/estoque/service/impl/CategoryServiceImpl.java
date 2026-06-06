@@ -1,5 +1,6 @@
 package com.claretiano.estoque.service.impl;
 
+import com.claretiano.estoque.handler.CategoryAlreadyExistsException;
 import com.claretiano.estoque.handler.CategoryCreateNotFoundException;
 import com.claretiano.estoque.handler.CategoryEmUsoException;
 import com.claretiano.estoque.handler.CategoryNotFoundException;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -24,6 +26,12 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponseDTO criarCategoria(CategoryRequestDTO categoryDTO) {
 
         String nomeNormalizado = normalizar(categoryDTO.getName());
+
+        Optional<Category> categoryExistente = categoryRepository.findByNomeNormalizado(nomeNormalizado);
+
+        if(categoryExistente.isPresent()){
+            throw new CategoryAlreadyExistsException("A categoria " + categoryDTO.getName() + " já está criada");
+        }
 
         Category category = Category.builder()
                 .name(categoryDTO.getName().trim())
@@ -46,12 +54,21 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category buscarPorNome(String nome) {
         String nomeNormalizado = normalizar(nome);
-        return categoryRepository.findByNomeNormalizado(nomeNormalizado).orElseThrow(() -> new CategoryCreateNotFoundException("Categoria" + nome + " não encontrada. Crie a categoria antes de cadastrar um produto." ));
+        return categoryRepository.findByNomeNormalizado(nomeNormalizado).orElseThrow(() ->
+                new CategoryCreateNotFoundException("Categoria " + nome + " não encontrada. Crie a categoria antes de cadastrar um produto." ));
     }
 
     @Override
     public CategoryResponseDTO atualizarCategoria(Long id, CategoryRequestDTO categoryDTO) {
         Category categoryExists = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+
+        String nomeNormalizado = normalizar(categoryDTO.getName());
+
+        Optional<Category> categoryExistente = categoryRepository.findByNomeNormalizado(nomeNormalizado);
+
+        if(categoryExistente.isPresent()){
+            throw new CategoryAlreadyExistsException("A categoria " + categoryDTO.getName() + " já está criada");
+        }
 
         categoryExists.setName(categoryDTO.getName());
         categoryExists.setDescription(categoryDTO.getDescription());

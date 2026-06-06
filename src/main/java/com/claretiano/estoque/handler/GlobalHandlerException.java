@@ -27,7 +27,7 @@ public class GlobalHandlerException {
     public ResponseEntity<ErrorResponse> handlerCategoryCreateNotFoundException(CategoryCreateNotFoundException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(ErrorResponse.builder()
-                        .message(("Categoria não encontrada. Cadastre a categoria antes de criar um produto."))
+                        .message((ex.getMessage()))
                         .time(LocalDateTime.now())
                         .build());
     }
@@ -53,7 +53,6 @@ public class GlobalHandlerException {
                 .body(ErrorResponse.builder()
                 .message(("Error:"  +((BeanPropertyBindingResult) ex.getBindingResult()).getFieldErrors().getFirst().getDefaultMessage()))
                 .time(LocalDateTime.now())
-//                .stack(ex.getMessage())
                 .build());
 
     }
@@ -65,5 +64,19 @@ public class GlobalHandlerException {
                         .message(("Categoria não encontrada. Insira um id valido"))
                         .time(LocalDateTime.now())
                         .build());
+    }
+
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handlerCategoryAlreadyExistsException(CategoryAlreadyExistsException ex){
+        return ResponseEntity.status(HttpStatus.IM_USED).body(ErrorResponse.builder()
+                .message((ex.getMessage()))
+                .time(LocalDateTime.now()).build());
+    }
+
+    @ExceptionHandler(InventoryNotFound.class)
+    public ResponseEntity<ErrorResponse> handlerInventoryNotFoundProduct(InventoryNotFound ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.builder()
+                .message((ex.getMessage()))
+                .time(LocalDateTime.now()).build());
     }
 }

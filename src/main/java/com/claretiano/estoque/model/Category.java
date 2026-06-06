@@ -1,9 +1,7 @@
 package com.claretiano.estoque.model;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +9,8 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "tb_category")
 public class Category {
     @Id
@@ -22,8 +22,5 @@ public class Category {
     private String description;
     @OneToMany(mappedBy = "category")
     private List<Product> products;
-    @ManyToOne
-    @JoinColumn(name = "sector_id")
-    private InventorySector sector;
     private String nomeNormalizado;
 }
