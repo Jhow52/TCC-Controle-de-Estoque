@@ -1,14 +1,16 @@
 package com.claretiano.estoque.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ManyToAny;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "tb_stockMovement")
 public class StockMovement {
@@ -17,9 +19,10 @@ public class StockMovement {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    private Product produto;
+    private Product product;
     @Column(nullable = false)
     private Integer quantity;
+    @Column(nullable = false)
     private LocalDateTime movementDate;
     @ManyToOne
     private User user;
@@ -28,12 +31,6 @@ public class StockMovement {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MovementType type;
-
-    //Atualização após a retirada do item(s)
-    @PreUpdate
-    public void preUpdate(){
-        movementDate = LocalDateTime.now();
-    }
 
     @PrePersist
     public void prePersist(){
