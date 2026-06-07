@@ -1,7 +1,7 @@
 package com.claretiano.estoque.service.impl;
 
-import com.claretiano.estoque.handler.InventoryNotFound;
-import com.claretiano.estoque.model.MovementType;
+import com.claretiano.estoque.handler.InventoryNotFoundException;
+import com.claretiano.estoque.enums.MovementType;
 import com.claretiano.estoque.model.Product;
 import com.claretiano.estoque.model.StockMovement;
 import com.claretiano.estoque.repository.ProductRepository;
@@ -37,13 +37,13 @@ public class StockMovementServiceImpl implements StockMovementService {
     public StockMovementResponseDTO buscarPorId(Long id) {
         return stockMovementRepository.findById(id)
                 .map(this::toResponseDTO)
-                .orElseThrow(() -> new InventoryNotFound("Movimentação com id " + id + " não foi encontrado"));
+                .orElseThrow(() -> new InventoryNotFoundException("Movimentação com id " + id + " não foi encontrado"));
     }
 
     @Override
     public StockMovementResponseDTO entrada(StockMovementRequestDTO stockMovementRequestDTO) {
         Product product = productRepository.findById(stockMovementRequestDTO.getProductId()).orElseThrow(() ->
-                new InventoryNotFound("O produto com o id " + stockMovementRequestDTO.getProductId() + " não foi encontrado"));
+                new InventoryNotFoundException("O produto com o id " + stockMovementRequestDTO.getProductId() + " não foi encontrado"));
 
         product.setQuantity(product.getQuantity() + stockMovementRequestDTO.getQuantity());
 
@@ -63,10 +63,10 @@ public class StockMovementServiceImpl implements StockMovementService {
     @Override
     public StockMovementResponseDTO saida(StockMovementRequestDTO stockMovementRequestDTO) {
         Product product = productRepository.findById(stockMovementRequestDTO.getProductId()).orElseThrow(() ->
-                new InventoryNotFound("O produto com o id " + stockMovementRequestDTO.getProductId() + " não foi encontrado"));
+                new InventoryNotFoundException("O produto com o id " + stockMovementRequestDTO.getProductId() + " não foi encontrado"));
 
         if(product.getQuantity() < stockMovementRequestDTO.getQuantity()) {
-            throw new InventoryNotFound("Estoque insuficiente para realizar a saída");
+            throw new InventoryNotFoundException("Estoque insuficiente para realizar a saída");
         }
 
         product.setQuantity(product.getQuantity() - stockMovementRequestDTO.getQuantity());
@@ -89,7 +89,7 @@ public class StockMovementServiceImpl implements StockMovementService {
         List<StockMovement> movements = stockMovementRepository.findByProduct_NameContainingIgnoreCase(productName);
 
         if(movements.isEmpty()){
-            throw new InventoryNotFound("Nenhuma movimentação encontrada para o produto " + productName);
+            throw new InventoryNotFoundException("Nenhuma movimentação encontrada para o produto " + productName);
         }
 
         return movements.stream()

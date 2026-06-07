@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/produto")
+@RequestMapping("/v1")
 public class ProductController {
     private final ProductService productService;
 
@@ -19,29 +19,29 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
+    @GetMapping(path = "/produto")
     public List<ProductResponseDTO> listarProdutos() {
         return productService.listarProdutos();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(path = "/produto/{id}")
     public ResponseEntity<ProductResponseDTO> buscarPorId(@PathVariable Long id){
         return ResponseEntity.ok(productService.buscarProdutoPorId(id));
     }
 
-    @PostMapping
+    @PostMapping(path = "/admin/produto")
     public ResponseEntity<ProductResponseDTO> criarProduto(@Valid @RequestBody ProductRequestDTO productDTO) {
         ProductResponseDTO product = productService.criarProduto(productDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/admin/produto/{id}")
     public ResponseEntity<ProductResponseDTO> atualizarProduto(@PathVariable Long id, @Valid @RequestBody ProductRequestDTO product) {
         ProductResponseDTO productAtualizado = productService.atualizar(id, product);
         return ResponseEntity.ok(productAtualizado);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(path = "/admin/produto/{id}")
     public ResponseEntity<ProductResponseDTO> deletarProduto(@PathVariable Long id) {
         ProductResponseDTO product = productService.remover(id);
         return ResponseEntity.status(HttpStatus.OK).body(product);

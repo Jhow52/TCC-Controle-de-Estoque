@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 public class CategoryRequestDTO {
     @NotBlank(message = "O nome da categoria é obrigatorio")
     private String name;

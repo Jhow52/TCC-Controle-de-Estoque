@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/v1")
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -20,29 +20,29 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping
+    @GetMapping(path = "/category")
     public List<CategoryResponseDTO> listarCategoria(){
         return categoryService.listarCategorias();
     }
 
-    @PostMapping
+    @PostMapping(path = "/admin/category")
     public ResponseEntity<CategoryResponseDTO> criarCategoria(@Valid @RequestBody CategoryRequestDTO categoryDTO){
         CategoryResponseDTO category = categoryService.criarCategoria(categoryDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(path = "/category/{id}")
     public ResponseEntity<CategoryResponseDTO> buscarPorId(@PathVariable Long id){
         return ResponseEntity.ok(categoryService.findById(id));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/admin/category/{id}")
     public ResponseEntity<CategoryResponseDTO> atualizarCategoria(@PathVariable Long id, @Valid @RequestBody CategoryRequestDTO categoryDTO){
         CategoryResponseDTO categoryAtualizado = categoryService.atualizarCategoria(id, categoryDTO);
         return ResponseEntity.ok(categoryAtualizado);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(path = "/admin/category/{id}")
     public ResponseEntity<MensagemRequestDTO> deletarCategory(@PathVariable Long id){
         categoryService.deletarCategoria(id);
         return ResponseEntity.ok(new MensagemRequestDTO("Categoria removida com sucesso"));

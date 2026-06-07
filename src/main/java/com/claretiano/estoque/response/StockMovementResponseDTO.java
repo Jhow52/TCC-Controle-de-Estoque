@@ -1,9 +1,7 @@
 package com.claretiano.estoque.response;
 
-import com.claretiano.estoque.model.MovementType;
-import com.claretiano.estoque.model.Product;
+import com.claretiano.estoque.enums.MovementType;
 import lombok.*;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 

@@ -25,10 +25,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDTO buscarProdutoPorId(Long id) {
-        ProductResponseDTO product = productRepository.findById(id)
+        return productRepository.findById(id)
                 .map(this::toResponseDTO)
                 .orElseThrow(() -> new ProductNotFoundException(id));
-        return product;
     }
 
     @Override
@@ -38,15 +37,7 @@ public class ProductServiceImpl implements ProductService {
                 productDTO.getCategoryName()
         );
 
-        Product product = Product.builder()
-                .name(productDTO.getName())
-                .description(productDTO.getDescription())
-                .price(productDTO.getPrice())
-                .quantity(productDTO.getQuantity())
-                .minStock(productDTO.getMinStock())
-                .category(category)
-                .sku(UUID.randomUUID().toString())
-                .build();
+        Product product = toEntity(productDTO,category);
 
         Product productSalvo = productRepository.save(product);
         return toResponseDTO(productSalvo);
@@ -81,6 +72,17 @@ public class ProductServiceImpl implements ProductService {
         Product produtosExistente = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         productRepository.delete(produtosExistente);
         return toResponseDTO(produtosExistente);
+    }
+
+    private Product toEntity(ProductRequestDTO productDTO, Category category){
+        return Product.builder()
+                .name(productDTO.getName())
+                .description(productDTO.getDescription())
+                .price(productDTO.getPrice())
+                .quantity(productDTO.getQuantity())
+                .minStock(productDTO.getMinStock())
+                .category(category)
+                .build();
     }
 
     private ProductResponseDTO toResponseDTO(Product product){

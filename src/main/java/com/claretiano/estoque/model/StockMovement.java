@@ -1,8 +1,8 @@
 package com.claretiano.estoque.model;
 
+import com.claretiano.estoque.enums.MovementType;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ManyToAny;
 
 import java.time.LocalDateTime;
 

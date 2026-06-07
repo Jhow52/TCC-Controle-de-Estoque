@@ -73,8 +73,36 @@ public class GlobalHandlerException {
                 .time(LocalDateTime.now()).build());
     }
 
-    @ExceptionHandler(InventoryNotFound.class)
-    public ResponseEntity<ErrorResponse> handlerInventoryNotFoundProduct(InventoryNotFound ex){
+    @ExceptionHandler(InventoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlerInventoryNotFoundProduct(InventoryNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.builder()
+                .message((ex.getMessage()))
+                .time(LocalDateTime.now()).build());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlerUserNotFound(UserNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.builder()
+                .message((ex.getMessage()))
+                .time(LocalDateTime.now()).build());
+    }
+
+    @ExceptionHandler(PasswordIncorrectException.class)
+    public ResponseEntity<ErrorResponse> handlerPasswordIncorrectException(PasswordIncorrectException ex){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.builder()
+                .message((ex.getMessage()))
+                .time(LocalDateTime.now()).build());
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handlerEmailAlreadyExistsException(EmailAlreadyExistsException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponse.builder()
+                .message((ex.getMessage()))
+                .time(LocalDateTime.now()).build());
+    }
+
+    @ExceptionHandler(EmailNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlerEmailNotFoundException(EmailNotFoundException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.builder()
                 .message((ex.getMessage()))
                 .time(LocalDateTime.now()).build());

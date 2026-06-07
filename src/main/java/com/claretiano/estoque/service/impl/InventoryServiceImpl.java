@@ -1,6 +1,6 @@
 package com.claretiano.estoque.service.impl;
 
-import com.claretiano.estoque.handler.InventoryNotFound;
+import com.claretiano.estoque.handler.InventoryNotFoundException;
 import com.claretiano.estoque.model.Category;
 import com.claretiano.estoque.model.Product;
 import com.claretiano.estoque.repository.CategoryRepository;
@@ -8,7 +8,6 @@ import com.claretiano.estoque.repository.ProductRepository;
 import com.claretiano.estoque.response.InventoryResponseDTO;
 import com.claretiano.estoque.service.InventoryService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.text.Normalizer;
 import java.util.List;
@@ -38,7 +37,7 @@ public class InventoryServiceImpl implements InventoryService {
         List<Product> products = productRepository.findAllByNameContainingIgnoreCase(nome);
 
         if(products.isEmpty()){
-            throw new InventoryNotFound("Produto '" + nome + "' não encontrado no inventário");
+            throw new InventoryNotFoundException("Produto '" + nome + "' não encontrado no inventário");
         }
 
         return products.stream()
@@ -50,14 +49,14 @@ public class InventoryServiceImpl implements InventoryService {
     public InventoryResponseDTO buscarPorId(Long id) {
         InventoryResponseDTO inventoryDTO = productRepository.findById(id)
                 .map(this::toResponseDTO)
-                .orElseThrow(() -> new InventoryNotFound("O produto com o id " + id + " não foi encontrado"));
+                .orElseThrow(() -> new InventoryNotFoundException("O produto com o id " + id + " não foi encontrado"));
         return inventoryDTO;
     }
 
     @Override
     public List<InventoryResponseDTO> buscarPorCategoria(String categoria) {
         Category category = categoryRepository.findByNomeNormalizado(normalizar(categoria))
-                .orElseThrow(() -> new InventoryNotFound("Categoria " + categoria + " não encontrada no inventário"));
+                .orElseThrow(() -> new InventoryNotFoundException("Categoria " + categoria + " não encontrada no inventário"));
 
         return category.getProducts()
                 .stream()
