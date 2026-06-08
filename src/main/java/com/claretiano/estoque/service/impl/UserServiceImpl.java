@@ -33,12 +33,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado"));
 
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getName())
+                .withUsername(user.getEmail())
                 .password(user.getPassword())
                 .authorities(
                         user.getRoles()
                                 .stream()
-                                .map(Enum::name)
+                                .map(role -> role.name())
                                 .toArray(String[]::new)
                 )
                 .build();

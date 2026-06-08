@@ -2,6 +2,8 @@ package com.claretiano.estoque.response;
 
 import lombok.*;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -9,7 +11,5 @@ import lombok.*;
 @NoArgsConstructor
 public class LoginResponseDTO {
     private String message;
-    private String name;
-    private String email;
-    private String role;
+    private String token;
 }

@@ -10,6 +10,7 @@ import com.claretiano.estoque.request.LoginRequestDTO;
 import com.claretiano.estoque.request.UserRequestDTO;
 import com.claretiano.estoque.response.LoginResponseDTO;
 import com.claretiano.estoque.response.UserResponseDTO;
+import com.claretiano.estoque.security.JwtService;
 import com.claretiano.estoque.service.AuthService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,12 +22,14 @@ import java.util.stream.Collectors;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public AuthServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -36,10 +39,11 @@ public class AuthServiceImpl implements AuthService {
 
         validatePassword(loginRequestDTO, user);
 
+        String token = jwtService.generateToken(user);
+
         return LoginResponseDTO.builder()
                 .message("Login realizado com sucesso")
-                .email(user.getEmail())
-                .name(user.getName())
+                .token(token)
                 .build();
     }
 
