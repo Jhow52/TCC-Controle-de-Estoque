@@ -28,4 +28,9 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> buscarPorId(@PathVariable Long id){
         return ResponseEntity.ok(userService.buscarPorId(id));
     }
+
+    @PutMapping("/admin/promover/{id}")
+    public ResponseEntity<UserResponseDTO> promoverParaAdmin(@PathVariable Long id){
+        return ResponseEntity.ok(userService.promoverParaAdmim(id));
+    }
 }

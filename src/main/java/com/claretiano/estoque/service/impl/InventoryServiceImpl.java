@@ -7,9 +7,9 @@ import com.claretiano.estoque.repository.CategoryRepository;
 import com.claretiano.estoque.repository.ProductRepository;
 import com.claretiano.estoque.response.InventoryResponseDTO;
 import com.claretiano.estoque.service.InventoryService;
+import com.claretiano.estoque.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.text.Normalizer;
 import java.util.List;
 
 @Service
@@ -55,7 +55,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public List<InventoryResponseDTO> buscarPorCategoria(String categoria) {
-        Category category = categoryRepository.findByNomeNormalizado(normalizar(categoria))
+        Category category = categoryRepository.findByNomeNormalizado(StringUtils.normalizar(categoria))
                 .orElseThrow(() -> new InventoryNotFoundException("Categoria " + categoria + " não encontrada no inventário"));
 
         return category.getProducts()
@@ -82,14 +82,4 @@ public class InventoryServiceImpl implements InventoryService {
                 .categoryName(product.getCategory().getName())
                 .build();
     }
-
-    public String normalizar(String texto) {
-        if (texto == null) return null;
-
-        String textoSemAcento = Normalizer.normalize(texto, Normalizer.Form.NFD)
-                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-
-        return textoSemAcento.toLowerCase().trim();
-    }
-
 }

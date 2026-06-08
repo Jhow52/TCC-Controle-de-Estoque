@@ -13,6 +13,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.claretiano.estoque.security.SecurityConstants.TOKEN_PREFIX;
+
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
@@ -30,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request,response);
             return;
         }
-        String token = authHeader.substring(7);
+        String token = authHeader.substring(TOKEN_PREFIX.length());
         if(!jwtService.isTokenValid(token)){
             filterChain.doFilter(request,response);
             return;

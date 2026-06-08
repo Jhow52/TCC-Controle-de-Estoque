@@ -11,4 +11,5 @@ import java.util.List;
 public interface UserService {
     List<UserResponseDTO> listarUsuario();
     UserResponseDTO buscarPorId(Long id);
+    UserResponseDTO promoverParaAdmim(Long id);
 }

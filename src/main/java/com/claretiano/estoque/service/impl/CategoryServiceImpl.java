@@ -9,6 +9,7 @@ import com.claretiano.estoque.repository.CategoryRepository;
 import com.claretiano.estoque.request.CategoryRequestDTO;
 import com.claretiano.estoque.response.CategoryResponseDTO;
 import com.claretiano.estoque.service.CategoryService;
+import com.claretiano.estoque.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
@@ -25,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     public CategoryResponseDTO criarCategoria(CategoryRequestDTO categoryDTO) {
 
-        String nomeNormalizado = normalizar(categoryDTO.getName());
+        String nomeNormalizado = StringUtils.normalizar(categoryDTO.getName());
 
         Optional<Category> categoryExistente = categoryRepository.findByNomeNormalizado(nomeNormalizado);
 
@@ -53,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category buscarPorNome(String nome) {
-        String nomeNormalizado = normalizar(nome);
+        String nomeNormalizado = StringUtils.normalizar(nome);
         return categoryRepository.findByNomeNormalizado(nomeNormalizado).orElseThrow(() ->
                 new CategoryCreateNotFoundException("Categoria " + nome + " não encontrada. Crie a categoria antes de cadastrar um produto." ));
     }
@@ -62,7 +63,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponseDTO atualizarCategoria(Long id, CategoryRequestDTO categoryDTO) {
         Category categoryExists = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
 
-        String nomeNormalizado = normalizar(categoryDTO.getName());
+        String nomeNormalizado = StringUtils.normalizar(categoryDTO.getName());
 
         Optional<Category> categoryExistente = categoryRepository.findByNomeNormalizado(nomeNormalizado);
 
@@ -106,12 +107,5 @@ public class CategoryServiceImpl implements CategoryService {
                 .build();
     }
 
-    public String normalizar(String texto) {
-        if (texto == null) return null;
 
-        String textoSemAcento = Normalizer.normalize(texto, Normalizer.Form.NFD)
-                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-
-        return textoSemAcento.toLowerCase().trim();
-    }
 }

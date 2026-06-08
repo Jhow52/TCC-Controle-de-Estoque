@@ -59,6 +59,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .orElseThrow(() -> new UserNotFoundException("O usuario com id " + id + " não foi encontrado"));
     }
 
+    @Override
+    public UserResponseDTO promoverParaAdmim(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario com o id " + id + " não encontrado"));
+
+        user.getRoles().add(Roles.ROLE_ADMIN);
+        User userNovo = userRepository.save(user);
+        return toResponseDTO(userNovo);
+    }
+
     private UserResponseDTO toResponseDTO(User user){
         return UserResponseDTO.builder()
                 .id(user.getId())
