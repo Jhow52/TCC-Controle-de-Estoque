@@ -12,7 +12,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ErrorResponse {
+
+    private LocalDateTime timestamp;
+
+    private Integer status;
+
+    private String error;
+
     private String message;
-    private LocalDateTime time;
-    private String stack;
+
+    private String path;
+
 }

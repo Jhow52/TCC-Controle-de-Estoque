@@ -80,6 +80,8 @@ public class InventoryServiceImpl implements InventoryService {
                 .quantity(product.getQuantity())
                 .minStock(product.getMinStock())
                 .categoryName(product.getCategory().getName())
+                .lowStock(product.getQuantity() < product.getMinStock())
+                .date(product.getCreatedAt())
                 .build();
     }
 }

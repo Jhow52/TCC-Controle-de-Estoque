@@ -2,6 +2,8 @@ package com.claretiano.estoque.response;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Getter
 @Setter
@@ -13,4 +15,6 @@ public class InventoryResponseDTO {
     private Integer quantity;
     private Integer minStock;
     private String categoryName;
+    private Boolean lowStock;
+    private LocalDateTime date;
 }

@@ -3,108 +3,209 @@ package com.claretiano.estoque.handler;
 import com.claretiano.estoque.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.access.AccessDeniedException;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class GlobalHandlerException {
 
-    @ExceptionHandler(UserCreateNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserCreateNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
+    private ErrorResponse buildError(
+            HttpStatus status,
+            String error,
+            String message,
+            HttpServletRequest request) {
 
-    @ExceptionHandler(ProductCreateNotFoundException.class)
-    public ResponseEntity<String> handleEmailNotFoundException(ProductCreateNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
-    
-    @ExceptionHandler(CategoryCreateNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handlerCategoryCreateNotFoundException(CategoryCreateNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(ErrorResponse.builder()
-                        .message((ex.getMessage()))
-                        .time(LocalDateTime.now())
-                        .build());
-    }
-
-    @ExceptionHandler(CategoryEmUsoException.class)
-    public ResponseEntity<String> handlerCategoryEmUsoException(CategoryEmUsoException ex){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<String> handlerProductNotFoundException(ProductNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(ProductStockMinException.class)
-    public ResponseEntity<String> handlerProductStockMinException(ProductStockMinException ex){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex){
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                .body(ErrorResponse.builder()
-                .message(("Error:"  +((BeanPropertyBindingResult) ex.getBindingResult()).getFieldErrors().getFirst().getDefaultMessage()))
-                .time(LocalDateTime.now())
-                .build());
-
-    }
-
-    @ExceptionHandler(CategoryNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handlerCategoryNotFoundException(CategoryNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(ErrorResponse.builder()
-                        .message(("Categoria não encontrada. Insira um id valido"))
-                        .time(LocalDateTime.now())
-                        .build());
-    }
-
-    @ExceptionHandler(CategoryAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handlerCategoryAlreadyExistsException(CategoryAlreadyExistsException ex){
-        return ResponseEntity.status(HttpStatus.IM_USED).body(ErrorResponse.builder()
-                .message((ex.getMessage()))
-                .time(LocalDateTime.now()).build());
-    }
-
-    @ExceptionHandler(InventoryNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handlerInventoryNotFoundProduct(InventoryNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.builder()
-                .message((ex.getMessage()))
-                .time(LocalDateTime.now()).build());
+        return ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(status.value())
+                .error(error)
+                .message(message)
+                .path(request.getRequestURI())
+                .build();
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handlerUserNotFound(UserNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.builder()
-                .message((ex.getMessage()))
-                .time(LocalDateTime.now()).build());
+    public ResponseEntity<ErrorResponse> handleUserNotFound(
+            UserNotFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(buildError(
+                        HttpStatus.NOT_FOUND,
+                        "Usuário não encontrado",
+                        ex.getMessage(),
+                        request));
     }
 
-    @ExceptionHandler(PasswordIncorrectException.class)
-    public ResponseEntity<ErrorResponse> handlerPasswordIncorrectException(PasswordIncorrectException ex){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.builder()
-                .message((ex.getMessage()))
-                .time(LocalDateTime.now()).build());
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleProductNotFound(
+            ProductNotFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(buildError(
+                        HttpStatus.NOT_FOUND,
+                        "Produto não encontrado",
+                        ex.getMessage(),
+                        request));
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryNotFound(
+            CategoryNotFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(buildError(
+                        HttpStatus.NOT_FOUND,
+                        "Categoria não encontrada",
+                        ex.getMessage(),
+                        request));
+    }
+
+    @ExceptionHandler(InventoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleInventoryNotFound(
+            InventoryNotFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(buildError(
+                        HttpStatus.NOT_FOUND,
+                        "Inventário não encontrado",
+                        ex.getMessage(),
+                        request));
+    }
+
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryAlreadyExists(
+            CategoryAlreadyExistsException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(buildError(
+                        HttpStatus.CONFLICT,
+                        "Categoria já cadastrada",
+                        ex.getMessage(),
+                        request));
+    }
+
+    @ExceptionHandler(CategoryEmUsoException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryEmUso(
+            CategoryEmUsoException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(buildError(
+                        HttpStatus.CONFLICT,
+                        "Categoria em uso",
+                        ex.getMessage(),
+                        request));
+    }
+
+    @ExceptionHandler(ProductStockMinException.class)
+    public ResponseEntity<ErrorResponse> handleProductStockMin(
+            ProductStockMinException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(buildError(
+                        HttpStatus.CONFLICT,
+                        "Estoque insuficiente",
+                        ex.getMessage(),
+                        request));
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handlerEmailAlreadyExistsException(EmailAlreadyExistsException ex){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponse.builder()
-                .message((ex.getMessage()))
-                .time(LocalDateTime.now()).build());
+    public ResponseEntity<ErrorResponse> handleEmailAlreadyExists(
+            EmailAlreadyExistsException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(buildError(
+                        HttpStatus.CONFLICT,
+                        "Email já cadastrado",
+                        ex.getMessage(),
+                        request));
     }
 
     @ExceptionHandler(EmailNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handlerEmailNotFoundException(EmailNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.builder()
-                .message((ex.getMessage()))
-                .time(LocalDateTime.now()).build());
+    public ResponseEntity<ErrorResponse> handleEmailNotFound(
+            EmailNotFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(buildError(
+                        HttpStatus.NOT_FOUND,
+                        "Email não encontrado",
+                        ex.getMessage(),
+                        request));
     }
+
+    @ExceptionHandler(PasswordIncorrectException.class)
+    public ResponseEntity<ErrorResponse> handlePasswordIncorrect(
+            PasswordIncorrectException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(buildError(
+                        HttpStatus.UNAUTHORIZED,
+                        "Credenciais inválidas",
+                        ex.getMessage(),
+                        request));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(
+            AccessDeniedException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(buildError(
+                        HttpStatus.FORBIDDEN,
+                        "Acesso negado",
+                        "Você precisa ser ADMIN para realizar esta ação",
+                        request));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidation(
+            MethodArgumentNotValidException ex) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult()
+                .getFieldErrors()
+                .forEach(error ->
+                        errors.put(
+                                error.getField(),
+                                error.getDefaultMessage()
+                        ));
+
+        return ResponseEntity.badRequest()
+                .body(errors);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGenericException(
+            Exception ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(buildError(
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Erro interno do servidor",
+                        ex.getMessage(),
+                        request));
+    }
+
 }
+

@@ -6,6 +6,7 @@ import com.claretiano.estoque.service.UserService;
 import com.claretiano.estoque.request.UserRequestDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,16 +20,19 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(path = "/user")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(path = "/admin/user")
     public List<UserResponseDTO> listarUsuarios(){
         return userService.listarUsuario();
     }
 
-    @GetMapping(path = "/user/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(path = "/admin/user/{id}")
     public ResponseEntity<UserResponseDTO> buscarPorId(@PathVariable Long id){
         return ResponseEntity.ok(userService.buscarPorId(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/promover/{id}")
     public ResponseEntity<UserResponseDTO> promoverParaAdmin(@PathVariable Long id){
         return ResponseEntity.ok(userService.promoverParaAdmim(id));
