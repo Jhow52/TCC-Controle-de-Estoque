@@ -12,5 +12,6 @@ public interface CategoryService {
     Category deletarCategoria(Long id);
     CategoryResponseDTO findById(Long id);
     Category buscarPorNome(String nome);
+    List<CategoryResponseDTO> buscarCategoriaPorNome(String nome);
     CategoryResponseDTO atualizarCategoria(Long id, CategoryRequestDTO categoryRequestDTO);
 }

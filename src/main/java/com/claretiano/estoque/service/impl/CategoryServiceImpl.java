@@ -60,8 +60,21 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<CategoryResponseDTO> buscarCategoriaPorNome(String nome) {
+        List<Category> categoryList = categoryRepository.findAllByNameContainingIgnoreCase(nome);
+
+        if(categoryList.isEmpty()){
+            throw new CategoryNotFoundException("Categoria " + nome + " não encontrada");
+        }
+
+        return categoryList.stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
+    @Override
     public CategoryResponseDTO atualizarCategoria(Long id, CategoryRequestDTO categoryDTO) {
-        Category categoryExists = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+        Category categoryExists = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Categoria com o id " + id + " foi atualizada com sucesso"));
 
         String nomeNormalizado = StringUtils.normalizar(categoryDTO.getName());
 

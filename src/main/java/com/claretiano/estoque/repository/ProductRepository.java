@@ -1,5 +1,6 @@
 package com.claretiano.estoque.repository;
 
+import com.claretiano.estoque.model.Category;
 import com.claretiano.estoque.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>{
     List<Product> findAllByNameContainingIgnoreCase(String nomeNormalizado);
+    Optional<Product> findByNomeNormalizado(String nomeNormalizado);
 }

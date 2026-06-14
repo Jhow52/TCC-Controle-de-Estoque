@@ -37,4 +37,10 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> promoverParaAdmin(@PathVariable Long id){
         return ResponseEntity.ok(userService.promoverParaAdmim(id));
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/admin/remover/{id}")
+    public ResponseEntity<UserResponseDTO> removerAdmin(@PathVariable Long id){
+        return ResponseEntity.ok(userService.removerAdmin(id));
+    }
 }

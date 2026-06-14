@@ -25,6 +25,11 @@ public class CategoryController {
         return categoryService.listarCategorias();
     }
 
+    @GetMapping(path = "/category/nome")
+    public List<CategoryResponseDTO> buscarPorNome(@RequestParam String nome){
+        return categoryService.buscarCategoriaPorNome(nome);
+    }
+
     @PostMapping(path = "/admin/category")
     public ResponseEntity<CategoryResponseDTO> criarCategoria(@Valid @RequestBody CategoryRequestDTO categoryDTO){
         CategoryResponseDTO category = categoryService.criarCategoria(categoryDTO);

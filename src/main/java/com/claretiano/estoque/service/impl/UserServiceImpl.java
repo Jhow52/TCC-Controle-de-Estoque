@@ -1,13 +1,14 @@
 package com.claretiano.estoque.service.impl;
 
 import com.claretiano.estoque.enums.Roles;
+
+import com.claretiano.estoque.handler.IllegalOperationException;
 import com.claretiano.estoque.handler.UserNotFoundException;
 import com.claretiano.estoque.model.User;
 import com.claretiano.estoque.repository.UserRepository;
-import com.claretiano.estoque.request.ProductRequestDTO;
-import com.claretiano.estoque.request.UserRequestDTO;
 import com.claretiano.estoque.response.UserResponseDTO;
 import com.claretiano.estoque.service.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,6 +66,34 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.getRoles().add(Roles.ROLE_ADMIN);
         User userNovo = userRepository.save(user);
         return toResponseDTO(userNovo);
+    }
+
+    @Override
+    public UserResponseDTO removerAdmin(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario com o id " + id + " não encontrado"));
+
+        String emailLogado = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        if(user.getEmail().equals(emailLogado)){
+            throw new IllegalOperationException(
+                    "Você não pode remover seu próprio perfil de administrador");
+        }
+
+        long totalAdmin = userRepository.findAll()
+                .stream()
+                .filter(u -> u.getRoles().contains(Roles.ROLE_ADMIN))
+                .count();
+
+        if(totalAdmin == 1 && user.getRoles().contains(Roles.ROLE_ADMIN)){
+            throw new IllegalOperationException(
+                    "Não é possível remover o último administrador do sistema");
+        }
+
+        user.getRoles().remove(Roles.ROLE_ADMIN);
+        User useNovo = userRepository.save(user);
+        return toResponseDTO(useNovo);
     }
 
     private UserResponseDTO toResponseDTO(User user){

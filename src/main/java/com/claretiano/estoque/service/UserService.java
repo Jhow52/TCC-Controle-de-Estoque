@@ -12,4 +12,5 @@ public interface UserService {
     List<UserResponseDTO> listarUsuario();
     UserResponseDTO buscarPorId(Long id);
     UserResponseDTO promoverParaAdmim(Long id);
+    UserResponseDTO removerAdmin(Long id);
 }

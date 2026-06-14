@@ -1,5 +1,6 @@
 package com.claretiano.estoque.service.impl;
 
+import com.claretiano.estoque.handler.ProductCreateNotFoundException;
 import com.claretiano.estoque.handler.ProductNotFoundException;
 import com.claretiano.estoque.model.Category;
 import com.claretiano.estoque.model.Product;
@@ -8,6 +9,7 @@ import com.claretiano.estoque.response.ProductResponseDTO;
 import com.claretiano.estoque.service.CategoryService;
 import com.claretiano.estoque.service.ProductService;
 import com.claretiano.estoque.request.ProductRequestDTO;
+import com.claretiano.estoque.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +29,20 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDTO buscarProdutoPorId(Long id) {
         return productRepository.findById(id)
                 .map(this::toResponseDTO)
-                .orElseThrow(() -> new ProductNotFoundException(id));
+                .orElseThrow(() -> new ProductNotFoundException("O produto com o id " + id + " não foi encontrado"));
+    }
+
+    @Override
+    public List<ProductResponseDTO> buscarProdutoPorNome(String nome) {
+        List<Product> productList = productRepository.findAllByNameContainingIgnoreCase(nome);
+
+        if(productList.isEmpty()){
+            throw new ProductNotFoundException("Produto " + nome + " não encontrado");
+        }
+
+       return productList.stream()
+               .map(this::toResponseDTO)
+               .toList();
     }
 
     @Override
@@ -53,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDTO atualizar(Long id, ProductRequestDTO productDTO) {
-        Product produtosExistente = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        Product produtosExistente = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("O produto com o id " + id + " foi atualizado"));
 
         produtosExistente.setName(productDTO.getName());
         produtosExistente.setDescription(productDTO.getDescription());
@@ -69,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDTO remover(Long id) {
-        Product produtosExistente = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        Product produtosExistente = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("O produto com o id " + id + " foi removido"));
         productRepository.delete(produtosExistente);
         return toResponseDTO(produtosExistente);
     }

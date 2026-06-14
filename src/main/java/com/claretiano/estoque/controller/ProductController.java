@@ -29,6 +29,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.buscarProdutoPorId(id));
     }
 
+    @GetMapping(path = "/produto/nome")
+    public List<ProductResponseDTO> buscarPorNome(@RequestParam String nome){
+        return productService.buscarProdutoPorNome(nome);
+    }
+
     @PostMapping(path = "/admin/produto")
     public ResponseEntity<ProductResponseDTO> criarProduto(@Valid @RequestBody ProductRequestDTO productDTO) {
         ProductResponseDTO product = productService.criarProduto(productDTO);
