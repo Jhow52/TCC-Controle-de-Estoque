@@ -1,72 +1,31 @@
-# Sistema de Gestão de Estoque
+# 📦 Stock Management System
 
-## 📋 Sobre o Projeto
+A complete inventory management system developed as a Final Course Project (TCC), focused on inventory control, product management, category organization, stock movement tracking, user authentication, and role-based access control.
 
-O Sistema de Gestão de Estoque foi desenvolvido como Trabalho de Conclusão de Curso (TCC) com o objetivo de auxiliar empresas no controle de produtos, categorias, movimentações de estoque e gerenciamento de usuários.
+## 🚀 About the Project
 
-A aplicação permite realizar o cadastro e gerenciamento de produtos, controlar entradas e saídas de estoque, gerenciar categorias e aplicar diferentes níveis de acesso através de autenticação e autorização utilizando JWT.
+The goal of this project is to provide a secure and efficient inventory management solution for businesses that need to control products, stock levels, inventory movements, and user permissions.
 
----
-
-## 🚀 Funcionalidades
-
-### 👤 Usuários
-
-* Cadastro de usuários
-* Login com autenticação JWT
-* Controle de permissões por perfil
-* Promoção de usuários para Administrador
-* Remoção de permissões de Administrador
-* Proteção contra remoção do próprio perfil ADMIN
-* Proteção contra remoção do último ADMIN do sistema
-
-### 📦 Produtos
-
-* Cadastro de produtos
-* Consulta de produtos
-* Atualização de produtos
-* Remoção de produtos
-* Controle de estoque mínimo
-
-### 🏷️ Categorias
-
-* Cadastro de categorias
-* Consulta de categorias
-* Atualização de categorias
-* Remoção de categorias
-* Validação para impedir exclusão de categorias em uso
-
-### 📊 Estoque
-
-* Controle de entrada de produtos
-* Controle de saída de produtos
-* Atualização automática das quantidades em estoque
-* Histórico de movimentações
-
-### 🔒 Segurança
-
-* Autenticação com JWT
-* Autorização baseada em Roles (USER e ADMIN)
-* Rotas protegidas
-* Swagger integrado com autenticação JWT
-* Tratamento global de exceções
-* CORS configurado para integração com Angular
+The system was built following REST API best practices using Spring Boot, JWT authentication, role-based authorization, exception handling, unit testing, and clean architecture principles.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Technologies Used
 
 ### Backend
 
 * Java 21
 * Spring Boot
 * Spring Security
+* JWT Authentication
 * Spring Data JPA
-* JWT (JSON Web Token)
 * Hibernate
 * MySQL
-* Flyway
+* H2 Database (Testing)
 * Swagger / OpenAPI
+* JUnit 5
+* Mockito
+* Lombok
 
 ### Frontend
 
@@ -75,170 +34,239 @@ A aplicação permite realizar o cadastro e gerenciamento de produtos, controlar
 * HTML
 * CSS
 
-### Ferramentas
+### Tools
 
 * Git
 * GitHub
 * IntelliJ IDEA
-* MySQL Workbench
+* VS Code
 * Postman
-* Swagger UI
 
 ---
 
-## 🏗️ Arquitetura do Projeto
+# ✨ Features
 
-O projeto segue o padrão de arquitetura em camadas:
+## Authentication
 
-```text
-Controller
-    ↓
-Service
-    ↓
-Repository
-    ↓
-Banco de Dados
+* User registration
+* User login
+* JWT token generation
+* Password encryption using BCrypt
+
+## Authorization
+
+* USER role
+* ADMIN role
+* Role-based endpoint protection
+* Admin promotion
+* Admin removal
+* Protection against removing your own admin role
+* Protection against removing the last system administrator
+
+## Product Management
+
+* Create product
+* Update product
+* Delete product
+* Search product by ID
+* Search product by name
+* List all products
+
+## Category Management
+
+* Create category
+* Update category
+* Delete category
+* Search category by ID
+* Search category by name
+* List all categories
+* Duplicate category validation
+
+## Inventory Control
+
+* List inventory
+* Search inventory by product
+* Search inventory by category
+* Search inventory by ID
+* Low stock monitoring
+
+## Stock Movement
+
+* Register stock entry
+* Register stock exit
+* Track movement history
+* Search movements by product
+
+## Exception Handling
+
+* Global exception handling
+* Standardized error responses
+* Validation errors
+* Business rule exceptions
+
+## Testing
+
+* Repository Tests
+* Service Layer Tests
+* H2 In-Memory Database
+* Mockito Mocks
+
+---
+
+# 🔒 Security
+
+The application uses JWT (JSON Web Token) authentication and Spring Security for authorization.
+
+Protected endpoints require a valid JWT token.
+
+Example Authorization Header:
+
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
 ```
 
-### Camadas
+---
 
-* Controller: Responsável por receber as requisições HTTP.
-* Service: Contém as regras de negócio.
-* Repository: Responsável pela comunicação com o banco de dados.
-* Entity: Representação das tabelas do banco.
-* DTO: Transferência de dados entre cliente e servidor.
-* Security: Configuração de autenticação e autorização.
+# 📂 Project Structure
+
+```text
+src
+├── controller
+├── service
+│   ├── impl
+├── repository
+├── model
+├── dto
+├── security
+├── handler
+├── configuration
+└── util
+```
 
 ---
 
-## 🔐 Controle de Acesso
+# 📖 API Documentation
 
-### ROLE_USER
-
-Possui acesso a:
-
-* Produtos
-* Categorias
-* Inventário
-* Movimentações de Estoque
-
-### ROLE_ADMIN
-
-Possui acesso a:
-
-* Todas as funcionalidades do sistema
-* Gerenciamento de usuários
-* Promoção e remoção de administradores
-
----
-
-## 📚 Documentação da API
-
-Após iniciar a aplicação, a documentação pode ser acessada através do Swagger:
+Swagger UI is available at:
 
 ```text
 http://localhost:8080/swagger-ui/index.html
 ```
 
-Utilize o endpoint de login para gerar um token JWT e clique no botão "Authorize" para testar os endpoints protegidos.
-
 ---
 
-## ⚙️ Como Executar o Projeto
+# ⚙️ Running the Project
 
-### Clonar o Repositório
+## Clone Repository
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/your-username/stock-management-system.git
 ```
 
-### Configurar o Banco de Dados
+## Navigate to Project
 
-Crie um banco MySQL e configure as credenciais no arquivo:
-
-```properties
-application.properties
+```bash
+cd stock-management-system
 ```
 
-Exemplo:
+## Configure Database
+
+Update the `application.properties` file:
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/estoque
+spring.datasource.url=jdbc:mysql://localhost:3306/stock
 spring.datasource.username=root
-spring.datasource.password=sua_senha
+spring.datasource.password=your_password
 ```
 
-### Executar o Backend
+## Run Application
 
 ```bash
-./mvnw spring-boot:run
+./gradlew bootRun
 ```
 
-ou
+or
 
 ```bash
 mvn spring-boot:run
 ```
 
-### Executar o Frontend
+---
+
+# 🧪 Running Tests
 
 ```bash
-npm install
-ng serve
+./gradlew test
 ```
 
-Aplicação disponível em:
+or
 
-```text
-http://localhost:4200
+```bash
+mvn test
 ```
 
 ---
 
-## 📸 Telas do Sistema
+# 📸 Screenshots
 
-### Login
+## Login
 
-(Adicionar imagem)
+(Add screenshot here)
 
-### Dashboard
+## Dashboard
 
-(Adicionar imagem)
+(Add screenshot here)
 
-### Produtos
+## Product Management
 
-(Adicionar imagem)
+(Add screenshot here)
 
-### Categorias
+## Category Management
 
-(Adicionar imagem)
+(Add screenshot here)
 
-### Administração de Usuários
+## Inventory Control
 
-(Adicionar imagem)
+(Add screenshot here)
 
----
+## Swagger Documentation
 
-## 🎯 Objetivo Acadêmico
-
-Este projeto foi desenvolvido como Trabalho de Conclusão de Curso com o objetivo de aplicar na prática conhecimentos adquiridos durante a graduação, envolvendo:
-
-* Programação Orientada a Objetos
-* Desenvolvimento Web
-* APIs REST
-* Segurança com JWT
-* Banco de Dados Relacional
-* Arquitetura em Camadas
-* Boas Práticas de Desenvolvimento
+(Add screenshot here)
 
 ---
 
-## 👨‍💻 Autor
+# 🎯 Business Rules Implemented
 
-Jhonata
+* Email must be unique.
+* Category names cannot be duplicated.
+* Stock quantity cannot become negative.
+* Users cannot remove their own ADMIN role.
+* The last ADMIN user cannot be removed.
+* Categories associated with products cannot be deleted.
 
-Desenvolvedor Back-end Java | Spring Boot | APIs REST | Segurança com JWT
+---
 
-GitHub: https://github.com/seu-usuario
+# 📚 What I Learned
 
-LinkedIn: (Adicionar LinkedIn)
+During the development of this project, I improved my knowledge in:
+
+* Object-Oriented Programming
+* REST APIs
+* Spring Boot
+* Spring Security
+* JWT Authentication
+* Exception Handling
+* Unit Testing
+* Repository Testing
+* Database Modeling
+* Angular Integration
+* Clean Code Principles
+* Git and GitHub
+
+---
+
+# 👨‍💻 Author
+
+Developed by Jhonata.
+
+This project was created as a Final Course Project (TCC) and portfolio project to demonstrate backend and full-stack development skills using Java and Spring Boot.
