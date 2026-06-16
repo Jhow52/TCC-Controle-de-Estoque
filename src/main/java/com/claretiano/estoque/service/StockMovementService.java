@@ -6,9 +6,9 @@ import com.claretiano.estoque.response.StockMovementResponseDTO;
 import java.util.List;
 
 public interface StockMovementService {
-    List<StockMovementResponseDTO> listarStockMovements();
-    StockMovementResponseDTO buscarPorId(Long id);
-    StockMovementResponseDTO entrada(StockMovementRequestDTO stockMovementRequestDTO);
-    StockMovementResponseDTO saida(StockMovementRequestDTO stockMovementRequestDTO);
-    List<StockMovementResponseDTO> buscarPorProduto(String productName);
+    List<StockMovementResponseDTO> listAllStockMovements();
+    StockMovementResponseDTO findById(Long id);
+    StockMovementResponseDTO registerEntry(StockMovementRequestDTO stockMovementRequestDTO);
+    StockMovementResponseDTO registerExit(StockMovementRequestDTO stockMovementRequestDTO);
+    List<StockMovementResponseDTO> findByProductName(String productName);
 }

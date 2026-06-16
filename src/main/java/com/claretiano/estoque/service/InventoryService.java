@@ -5,9 +5,9 @@ import com.claretiano.estoque.response.InventoryResponseDTO;
 import java.util.List;
 
 public interface InventoryService {
-    List<InventoryResponseDTO> listarInventario();
-    List<InventoryResponseDTO> buscarPorNome(String nome);
-    InventoryResponseDTO buscarPorId(Long id);
-    List<InventoryResponseDTO> buscarPorCategoria(String categoria);
-    List<InventoryResponseDTO> estoqueBaixo();
+    List<InventoryResponseDTO> listAllInventory();
+    List<InventoryResponseDTO> findByName(String name);
+    InventoryResponseDTO findById(Long id);
+    List<InventoryResponseDTO> findByCategory(String category);
+    List<InventoryResponseDTO> findLowStockProducts();
 }

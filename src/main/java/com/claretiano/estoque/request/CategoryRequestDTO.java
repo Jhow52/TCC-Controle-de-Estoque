@@ -1,13 +1,15 @@
 package com.claretiano.estoque.request;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CategoryRequestDTO {
-    @NotBlank(message = "O nome da categoria é obrigatorio")
+    @NotBlank(message = "Name is required")
     private String name;
-    @NotBlank(message = "Adicione uma descrição para sua categoria")
+    @NotBlank(message = "Add a description for your category")
     private String description;
 }

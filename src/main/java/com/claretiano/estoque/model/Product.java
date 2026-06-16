@@ -33,7 +33,7 @@ public class Product {
     private Category category;
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
-    private String nomeNormalizado;
+    private String nameNormalized;
 
     @PrePersist
     public void prePersist(){

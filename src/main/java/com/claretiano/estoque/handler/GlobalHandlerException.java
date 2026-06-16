@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import java.time.LocalDateTime;
-
 @RestControllerAdvice
 public class GlobalHandlerException {
 
@@ -41,7 +39,7 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(buildError(
                         HttpStatus.NOT_FOUND,
-                        "Usuário não encontrado",
+                        "User not found",
                         ex.getMessage(),
                         request));
     }
@@ -54,7 +52,7 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(buildError(
                         HttpStatus.NOT_FOUND,
-                        "Produto não encontrado",
+                        "Product not found",
                         ex.getMessage(),
                         request));
     }
@@ -67,7 +65,7 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(buildError(
                         HttpStatus.NOT_FOUND,
-                        "Categoria não encontrada",
+                        "Category not found",
                         ex.getMessage(),
                         request));
     }
@@ -80,7 +78,7 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(buildError(
                         HttpStatus.NOT_FOUND,
-                        "Inventário não encontrado",
+                        "Inventory not found",
                         ex.getMessage(),
                         request));
     }
@@ -93,20 +91,20 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(buildError(
                         HttpStatus.CONFLICT,
-                        "Categoria já cadastrada",
+                        "Category already registered",
                         ex.getMessage(),
                         request));
     }
 
-    @ExceptionHandler(CategoryEmUsoException.class)
+    @ExceptionHandler(CategoryInUseException.class)
     public ResponseEntity<ErrorResponse> handleCategoryEmUso(
-            CategoryEmUsoException ex,
+            CategoryInUseException ex,
             HttpServletRequest request) {
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(buildError(
                         HttpStatus.CONFLICT,
-                        "Categoria em uso",
+                        "Category in use",
                         ex.getMessage(),
                         request));
     }
@@ -119,7 +117,7 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(buildError(
                         HttpStatus.CONFLICT,
-                        "Estoque insuficiente",
+                        "Insufficient stock",
                         ex.getMessage(),
                         request));
     }
@@ -132,7 +130,7 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(buildError(
                         HttpStatus.CONFLICT,
-                        "Email já cadastrado",
+                        "Email already registered",
                         ex.getMessage(),
                         request));
     }
@@ -145,7 +143,7 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(buildError(
                         HttpStatus.NOT_FOUND,
-                        "Email não encontrado",
+                        "Email not found",
                         ex.getMessage(),
                         request));
     }
@@ -158,7 +156,7 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(buildError(
                         HttpStatus.UNAUTHORIZED,
-                        "Credenciais inválidas",
+                        "Invalid credentials",
                         ex.getMessage(),
                         request));
     }
@@ -171,8 +169,8 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(buildError(
                         HttpStatus.FORBIDDEN,
-                        "Acesso negado",
-                        "Você precisa ser ADMIN para realizar esta ação",
+                        "Access denied",
+                        "You need to be an administrator to perform this action",
                         request));
     }
 
@@ -202,7 +200,7 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(buildError(
                         HttpStatus.INTERNAL_SERVER_ERROR,
-                        "Erro interno do servidor",
+                        "Internal Server ERROR",
                         ex.getMessage(),
                         request));
     }

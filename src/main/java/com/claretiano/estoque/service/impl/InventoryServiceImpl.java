@@ -25,7 +25,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<InventoryResponseDTO> listarInventario() {
+    public List<InventoryResponseDTO> listAllInventory() {
         return productRepository.findAll()
                 .stream()
                 .map(this::toResponseDTO)
@@ -33,11 +33,11 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<InventoryResponseDTO> buscarPorNome(String nome) {
-        List<Product> products = productRepository.findAllByNameContainingIgnoreCase(nome);
+    public List<InventoryResponseDTO> findByName(String name) {
+        List<Product> products = productRepository.findAllByNameContainingIgnoreCase(name);
 
         if(products.isEmpty()){
-            throw new InventoryNotFoundException("Produto '" + nome + "' não encontrado no inventário");
+            throw new InventoryNotFoundException("Product " + name + " not found in the inventory");
         }
 
         return products.stream()
@@ -46,26 +46,25 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public InventoryResponseDTO buscarPorId(Long id) {
-        InventoryResponseDTO inventoryDTO = productRepository.findById(id)
+    public InventoryResponseDTO findById(Long id) {
+        return productRepository.findById(id)
                 .map(this::toResponseDTO)
-                .orElseThrow(() -> new InventoryNotFoundException("O produto com o id " + id + " não foi encontrado"));
-        return inventoryDTO;
+                .orElseThrow(() -> new InventoryNotFoundException("The product with id " + id + " was not found"));
     }
 
     @Override
-    public List<InventoryResponseDTO> buscarPorCategoria(String categoria) {
-        Category category = categoryRepository.findByNomeNormalizado(StringUtils.normalizar(categoria))
-                .orElseThrow(() -> new InventoryNotFoundException("Categoria " + categoria + " não encontrada no inventário"));
+    public List<InventoryResponseDTO> findByCategory(String category) {
+        Category foundCategory = categoryRepository.findByNameNormalized(StringUtils.normalize(category))
+                .orElseThrow(() -> new InventoryNotFoundException("Category " + category + " was not found in the inventory"));
 
-        return category.getProducts()
+        return foundCategory.getProducts()
                 .stream()
                 .map(this::toResponseDTO)
                 .toList();
     }
 
     @Override
-    public List<InventoryResponseDTO> estoqueBaixo() {
+    public List<InventoryResponseDTO> findLowStockProducts() {
         return productRepository.findAll()
                 .stream()
                 .filter(product -> product.getQuantity() <= product.getMinStock())
@@ -80,7 +79,7 @@ public class InventoryServiceImpl implements InventoryService {
                 .quantity(product.getQuantity())
                 .minStock(product.getMinStock())
                 .categoryName(product.getCategory().getName())
-                .lowStock(product.getQuantity() < product.getMinStock())
+                .lowStock(product.getQuantity() <= product.getMinStock())
                 .date(product.getCreatedAt())
                 .build();
     }

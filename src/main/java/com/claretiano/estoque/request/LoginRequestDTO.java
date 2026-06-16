@@ -8,8 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequestDTO {
-    @NotBlank(message = "O email é obrigatorio")
+    @NotBlank(message = "Email is required")
     private String email;
-    @NotBlank(message = "A senha é obrigatoria")
+    @NotBlank(message = "Password is required")
     private String password;
 }

@@ -32,8 +32,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.FORBIDDEN.value())
-                .error("Acesso negado")
-                .message("Você precisa ser ADMIN para realizar esta ação")
+                .error("Access denied")
+                .message("You need to be an administrator to perform this action")
                 .path(request.getRequestURI())
                 .build();
 

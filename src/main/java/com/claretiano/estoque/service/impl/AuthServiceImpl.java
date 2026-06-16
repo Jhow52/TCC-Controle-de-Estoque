@@ -35,14 +35,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
         User user = userRepository.findByEmail(loginRequestDTO.getEmail()).orElseThrow(() ->
-                new EmailNotFoundException("Email Invalido"));
+                new EmailNotFoundException("No account found with this email"));
 
         validatePassword(loginRequestDTO, user);
 
         String token = jwtService.generateToken(user);
 
         return LoginResponseDTO.builder()
-                .message("Login realizado com sucesso")
+                .message("Login successfully")
                 .token(token)
                 .build();
     }
@@ -51,20 +51,19 @@ public class AuthServiceImpl implements AuthService {
     public UserResponseDTO register(UserRequestDTO userRequestDTO) {
 
         if(userRepository.existsByEmail(userRequestDTO.getEmail())){
-            throw new EmailAlreadyExistsException("Já existe um usuario com esse email");
+            throw new EmailAlreadyExistsException("A user with this email is already registered.");
         }
 
         User user = toEntity(userRequestDTO);
-
-        User userSalvo = userRepository.save(user);
-        return toResponseDTO(userSalvo);
+        User userSalved = userRepository.save(user);
+        return toResponseDTO(userSalved);
     }
 
     public void validatePassword(LoginRequestDTO loginRequestDTO, User user){
-        boolean password = passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword());
+        boolean passwordMatches = passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword());
 
-        if(!password){
-            throw new PasswordIncorrectException("Senha Invalida");
+        if(!passwordMatches){
+            throw new PasswordIncorrectException("Incorrect Password");
         }
     }
 

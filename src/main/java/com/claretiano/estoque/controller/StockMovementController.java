@@ -20,29 +20,29 @@ public class StockMovementController {
     }
 
     @GetMapping(path = "movimentacao-estoque")
-    public List<StockMovementResponseDTO> listarStockMovement(){
-        return stockMovementService.listarStockMovements();
+    public List<StockMovementResponseDTO> listAllStockMovements(){
+        return stockMovementService.listAllStockMovements();
     }
 
     @GetMapping(path = "/movimentacao-estoque/{id}")
-    public ResponseEntity<StockMovementResponseDTO> listaPorId(@PathVariable Long id){
-        return ResponseEntity.ok(stockMovementService.buscarPorId(id));
+    public ResponseEntity<StockMovementResponseDTO> findById(@PathVariable Long id){
+        return ResponseEntity.ok(stockMovementService.findById(id));
     }
 
     @GetMapping(path = "/movimentacao-estoque/produto")
-    public List<StockMovementResponseDTO> buscarPorProduto(@RequestParam String productName){
-        return stockMovementService.buscarPorProduto(productName);
+    public List<StockMovementResponseDTO> findByProductName(@RequestParam String productName){
+        return stockMovementService.findByProductName(productName);
     }
 
     @PostMapping(path = "/admin/movimentacao-estoque/entrada")
-    public ResponseEntity<StockMovementResponseDTO> entradaStockMovement(@Valid @RequestBody StockMovementRequestDTO stockMovement){
-        StockMovementResponseDTO stockMovementUpdate = stockMovementService.entrada(stockMovement);
+    public ResponseEntity<StockMovementResponseDTO> registerEntry(@Valid @RequestBody StockMovementRequestDTO stockMovement){
+        StockMovementResponseDTO stockMovementUpdate = stockMovementService.registerEntry(stockMovement);
         return ResponseEntity.ok(stockMovementUpdate);
     }
 
     @PostMapping(path = "/admin/movimentacao-estoque/saida")
-    public ResponseEntity<StockMovementResponseDTO> saidaStockMovement(@Valid @RequestBody StockMovementRequestDTO stockMovement){
-        StockMovementResponseDTO stockMovementUpdate = stockMovementService.saida(stockMovement);
+    public ResponseEntity<StockMovementResponseDTO> registerExit(@Valid @RequestBody StockMovementRequestDTO stockMovement){
+        StockMovementResponseDTO stockMovementUpdate = stockMovementService.registerExit(stockMovement);
         return ResponseEntity.ok(stockMovementUpdate);
     }
 }

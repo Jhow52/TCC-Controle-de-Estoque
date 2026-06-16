@@ -26,18 +26,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDTO buscarProdutoPorId(Long id) {
+    public ProductResponseDTO findProductById(Long id) {
         return productRepository.findById(id)
                 .map(this::toResponseDTO)
-                .orElseThrow(() -> new ProductNotFoundException("O produto com o id " + id + " não foi encontrado"));
+                .orElseThrow(() -> new ProductNotFoundException("The product with id " + id + " was not found"));
     }
 
     @Override
-    public List<ProductResponseDTO> buscarProdutoPorNome(String nome) {
-        List<Product> productList = productRepository.findAllByNameContainingIgnoreCase(nome);
+    public List<ProductResponseDTO> findByName(String name) {
+        List<Product> productList = productRepository.findAllByNameContainingIgnoreCase(name);
 
         if(productList.isEmpty()){
-            throw new ProductNotFoundException("Produto " + nome + " não encontrado");
+            throw new ProductNotFoundException("Product " + name + " not found");
         }
 
        return productList.stream()
@@ -46,20 +46,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDTO criarProduto(ProductRequestDTO productDTO) {
+    public ProductResponseDTO createProduct(ProductRequestDTO productDTO) {
 
-        Category category = categoryService.buscarPorNome(
+        Category category = categoryService.findByName(
                 productDTO.getCategoryName()
         );
 
         Product product = toEntity(productDTO,category);
-
-        Product productSalvo = productRepository.save(product);
-        return toResponseDTO(productSalvo);
+        Product productSaved = productRepository.save(product);
+        return toResponseDTO(productSaved);
     }
 
     @Override
-    public List<ProductResponseDTO> listarProdutos() {
+    public List<ProductResponseDTO> listAllProducts() {
         return productRepository.findAll()
                 .stream()
                 .map(this::toResponseDTO)
@@ -67,26 +66,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDTO atualizar(Long id, ProductRequestDTO productDTO) {
-        Product produtosExistente = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("O produto com o id " + id + " foi atualizado"));
+    public ProductResponseDTO updateProduct(Long id, ProductRequestDTO productDTO) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("The product with id " + id + " was not found"));
 
-        produtosExistente.setName(productDTO.getName());
-        produtosExistente.setDescription(productDTO.getDescription());
-        produtosExistente.setPrice(productDTO.getPrice());
-        produtosExistente.setQuantity(productDTO.getQuantity());
-        produtosExistente.setMinStock(productDTO.getMinStock());
-        Category category = categoryService.buscarPorNome(productDTO.getCategoryName());
-        produtosExistente.setCategory(category);
+        Category category = categoryService.findByName(productDTO.getCategoryName());
 
-        Product productAtualizado = productRepository.save(produtosExistente);
-        return toResponseDTO(productAtualizado);
+        update(product, productDTO, category);
+        Product productSaved = productRepository.save(product);
+        return toResponseDTO(productSaved);
     }
 
     @Override
-    public ProductResponseDTO remover(Long id) {
-        Product produtosExistente = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("O produto com o id " + id + " foi removido"));
-        productRepository.delete(produtosExistente);
-        return toResponseDTO(produtosExistente);
+    public ProductResponseDTO removeProduct(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("The product with id " + id + " was not found"));
+        productRepository.delete(product);
+        return toResponseDTO(product);
+    }
+
+    private void update(Product product, ProductRequestDTO productRequestDTO,Category category){
+        product.setName(productRequestDTO.getName());
+        product.setDescription(productRequestDTO.getDescription());
+        product.setPrice(productRequestDTO.getPrice());
+        product.setQuantity(productRequestDTO.getQuantity());
+        product.setMinStock(productRequestDTO.getMinStock());
+        product.setCategory(category);
     }
 
     private Product toEntity(ProductRequestDTO productDTO, Category category){

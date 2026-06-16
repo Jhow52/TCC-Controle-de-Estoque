@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<UserResponseDTO> listarUsuario() {
+    public List<UserResponseDTO> listAllUsers() {
         return userRepository.findAll()
                 .stream()
                 .map(this::toResponseDTO)
@@ -53,32 +53,32 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserResponseDTO buscarPorId(Long id) {
+    public UserResponseDTO findById(Long id) {
         return userRepository.findById(id)
                 .map(this::toResponseDTO)
-                .orElseThrow(() -> new UserNotFoundException("O usuario com id " + id + " não foi encontrado"));
+                .orElseThrow(() -> new UserNotFoundException("The user with id " + id + " was not found"));
     }
 
     @Override
-    public UserResponseDTO promoverParaAdmim(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario com o id " + id + " não encontrado"));
+    public UserResponseDTO promoteToAdmin(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("The user with id " + id + " not found"));
 
         user.getRoles().add(Roles.ROLE_ADMIN);
-        User userNovo = userRepository.save(user);
-        return toResponseDTO(userNovo);
+        User savedUser = userRepository.save(user);
+        return toResponseDTO(savedUser);
     }
 
     @Override
-    public UserResponseDTO removerAdmin(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario com o id " + id + " não encontrado"));
+    public UserResponseDTO removeAdmin(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("The user with id " + id + " not found"));
 
-        String emailLogado = SecurityContextHolder.getContext()
+        String emailLogged = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getName();
 
-        if(user.getEmail().equals(emailLogado)){
+        if(user.getEmail().equals(emailLogged)){
             throw new IllegalOperationException(
-                    "Você não pode remover seu próprio perfil de administrador");
+                    "You cannot remove your own administrator profile");
         }
 
         long totalAdmin = userRepository.findAll()
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         if(totalAdmin == 1 && user.getRoles().contains(Roles.ROLE_ADMIN)){
             throw new IllegalOperationException(
-                    "Não é possível remover o último administrador do sistema");
+                    "It's not possible to remove the last system administrator");
         }
 
         user.getRoles().remove(Roles.ROLE_ADMIN);

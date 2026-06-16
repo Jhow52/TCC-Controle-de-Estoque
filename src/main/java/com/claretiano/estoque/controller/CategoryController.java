@@ -1,7 +1,6 @@
 package com.claretiano.estoque.controller;
 
 import com.claretiano.estoque.request.CategoryRequestDTO;
-import com.claretiano.estoque.request.MensagemRequestDTO;
 import com.claretiano.estoque.response.CategoryResponseDTO;
 import com.claretiano.estoque.service.CategoryService;
 import jakarta.validation.Valid;
@@ -21,35 +20,35 @@ public class CategoryController {
     }
 
     @GetMapping(path = "/category")
-    public List<CategoryResponseDTO> listarCategoria(){
-        return categoryService.listarCategorias();
+    public List<CategoryResponseDTO> listAllCategories(){
+        return categoryService.listAllCategories();
     }
 
     @GetMapping(path = "/category/nome")
-    public List<CategoryResponseDTO> buscarPorNome(@RequestParam String nome){
-        return categoryService.buscarCategoriaPorNome(nome);
+    public List<CategoryResponseDTO> findCategoryByName(@RequestParam String nome){
+        return categoryService.findCategoryByName(nome);
     }
 
     @PostMapping(path = "/admin/category")
-    public ResponseEntity<CategoryResponseDTO> criarCategoria(@Valid @RequestBody CategoryRequestDTO categoryDTO){
-        CategoryResponseDTO category = categoryService.criarCategoria(categoryDTO);
+    public ResponseEntity<CategoryResponseDTO> createCategory(@Valid @RequestBody CategoryRequestDTO categoryDTO){
+        CategoryResponseDTO category = categoryService.createCategory(categoryDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }
 
     @GetMapping(path = "/category/{id}")
-    public ResponseEntity<CategoryResponseDTO> buscarPorId(@PathVariable Long id){
+    public ResponseEntity<CategoryResponseDTO> findById(@PathVariable Long id){
         return ResponseEntity.ok(categoryService.findById(id));
     }
 
     @PutMapping(path = "/admin/category/{id}")
-    public ResponseEntity<CategoryResponseDTO> atualizarCategoria(@PathVariable Long id, @Valid @RequestBody CategoryRequestDTO categoryDTO){
-        CategoryResponseDTO categoryAtualizado = categoryService.atualizarCategoria(id, categoryDTO);
-        return ResponseEntity.ok(categoryAtualizado);
+    public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequestDTO categoryDTO){
+        CategoryResponseDTO categoryUpdated = categoryService.updateCategory(id, categoryDTO);
+        return ResponseEntity.ok(categoryUpdated);
     }
 
     @DeleteMapping(path = "/admin/category/{id}")
-    public ResponseEntity<MensagemRequestDTO> deletarCategory(@PathVariable Long id){
-        categoryService.deletarCategoria(id);
-        return ResponseEntity.ok(new MensagemRequestDTO("Categoria removida com sucesso"));
+    public ResponseEntity<CategoryResponseDTO> removeCategories(@PathVariable Long id){
+        CategoryResponseDTO categoryDelete = categoryService.removeCategories(id);
+        return ResponseEntity.ok(categoryDelete);
     }
 }

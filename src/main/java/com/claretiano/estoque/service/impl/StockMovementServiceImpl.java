@@ -26,7 +26,7 @@ public class StockMovementServiceImpl implements StockMovementService {
 
 
     @Override
-    public List<StockMovementResponseDTO> listarStockMovements() {
+    public List<StockMovementResponseDTO> listAllStockMovements() {
         return stockMovementRepository.findAll()
                 .stream()
                 .map(this::toResponseDTO)
@@ -34,67 +34,64 @@ public class StockMovementServiceImpl implements StockMovementService {
     }
 
     @Override
-    public StockMovementResponseDTO buscarPorId(Long id) {
+    public StockMovementResponseDTO findById(Long id) {
         return stockMovementRepository.findById(id)
                 .map(this::toResponseDTO)
-                .orElseThrow(() -> new InventoryNotFoundException("Movimentação com id " + id + " não foi encontrado"));
+                .orElseThrow(() -> new InventoryNotFoundException("Movement with id " + id + " was not found"));
     }
 
     @Override
-    public StockMovementResponseDTO entrada(StockMovementRequestDTO stockMovementRequestDTO) {
+    public StockMovementResponseDTO registerEntry(StockMovementRequestDTO stockMovementRequestDTO) {
         Product product = productRepository.findById(stockMovementRequestDTO.getProductId()).orElseThrow(() ->
-                new InventoryNotFoundException("O produto com o id " + stockMovementRequestDTO.getProductId() + " não foi encontrado"));
+                new InventoryNotFoundException("The product with id " + stockMovementRequestDTO.getProductId() + " was not found"));
 
         product.setQuantity(product.getQuantity() + stockMovementRequestDTO.getQuantity());
 
         productRepository.save(product);
 
-        StockMovement movement = StockMovement.builder()
-                .product(product)
-                .quantity(stockMovementRequestDTO.getQuantity())
-                .notes(stockMovementRequestDTO.getNotes())
-                .type(MovementType.IN)
-                .build();
-
+        StockMovement movement = toEntity(stockMovementRequestDTO, product, MovementType.IN);
         stockMovementRepository.save(movement);
         return toResponseDTO(movement);
     }
 
     @Override
-    public StockMovementResponseDTO saida(StockMovementRequestDTO stockMovementRequestDTO) {
+    public StockMovementResponseDTO registerExit(StockMovementRequestDTO stockMovementRequestDTO) {
         Product product = productRepository.findById(stockMovementRequestDTO.getProductId()).orElseThrow(() ->
-                new InventoryNotFoundException("O produto com o id " + stockMovementRequestDTO.getProductId() + " não foi encontrado"));
+                new InventoryNotFoundException("The product with id " + stockMovementRequestDTO.getProductId() + " was not found"));
 
         if(product.getQuantity() < stockMovementRequestDTO.getQuantity()) {
-            throw new InventoryNotFoundException("Estoque insuficiente para realizar a saída");
+            throw new InventoryNotFoundException("Insufficient stock to fulfill the order");
         }
 
         product.setQuantity(product.getQuantity() - stockMovementRequestDTO.getQuantity());
 
         productRepository.save(product);
 
-        StockMovement movement = StockMovement.builder()
-                .product(product)
-                .quantity(stockMovementRequestDTO.getQuantity())
-                .notes(stockMovementRequestDTO.getNotes())
-                .type(MovementType.OUT)
-                .build();
-
+        StockMovement movement = toEntity(stockMovementRequestDTO, product, MovementType.OUT);
         StockMovement movementSaved = stockMovementRepository.save(movement);
-        return toResponseDTO(movement);
+        return toResponseDTO(movementSaved);
     }
 
     @Override
-    public List<StockMovementResponseDTO> buscarPorProduto(String productName) {
-        List<StockMovement> movements = stockMovementRepository.findByProduct_NameContainingIgnoreCase(productName);
+    public List<StockMovementResponseDTO> findByProductName(String productName) {
+        List<StockMovement> movements = stockMovementRepository.findByProductNameContainingIgnoreCase(productName);
 
         if(movements.isEmpty()){
-            throw new InventoryNotFoundException("Nenhuma movimentação encontrada para o produto " + productName);
+            throw new InventoryNotFoundException("No movements found for the product: " + productName);
         }
 
         return movements.stream()
                 .map(this::toResponseDTO)
                 .toList();
+    }
+
+    private StockMovement toEntity(StockMovementRequestDTO stockMovementRequestDTO, Product product, MovementType type){
+        return StockMovement.builder()
+                .product(product)
+                .quantity(stockMovementRequestDTO.getQuantity())
+                .notes(stockMovementRequestDTO.getNotes())
+                .type(type)
+                .build();
     }
 
     private StockMovementResponseDTO toResponseDTO(StockMovement stockMovement) {

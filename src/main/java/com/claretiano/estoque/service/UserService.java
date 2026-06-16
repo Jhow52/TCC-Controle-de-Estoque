@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 public interface UserService {
-    List<UserResponseDTO> listarUsuario();
-    UserResponseDTO buscarPorId(Long id);
-    UserResponseDTO promoverParaAdmim(Long id);
-    UserResponseDTO removerAdmin(Long id);
+    List<UserResponseDTO> listAllUsers();
+    UserResponseDTO findById(Long id);
+    UserResponseDTO promoteToAdmin(Long id);
+    UserResponseDTO removeAdmin(Long id);
 }

@@ -17,27 +17,27 @@ public class InventoryController {
     }
 
     @GetMapping(path = "/inventario")
-    public List<InventoryResponseDTO> listarInventario(){
-        return inventoryService.listarInventario();
+    public List<InventoryResponseDTO> listAllInventory(){
+        return inventoryService.listAllInventory();
     }
 
     @GetMapping(path = "/inventario/{id}")
-    public ResponseEntity<InventoryResponseDTO> buscarPorId(@PathVariable Long id){
-        return ResponseEntity.ok(inventoryService.buscarPorId(id));
+    public ResponseEntity<InventoryResponseDTO> findById(@PathVariable Long id){
+        return ResponseEntity.ok(inventoryService.findById(id));
     }
 
     @GetMapping(path = "/inventario/nome")
-    public List<InventoryResponseDTO> buscarPorNome(@RequestParam String nome){
-        return inventoryService.buscarPorNome(nome);
+    public List<InventoryResponseDTO> findByName(@RequestParam String name){
+        return inventoryService.findByName(name);
     }
 
     @GetMapping(path = "/inventario/categoria")
-    public List<InventoryResponseDTO> buscarPorCategoria(@RequestParam String categoria){
-        return inventoryService.buscarPorCategoria(categoria);
+    public List<InventoryResponseDTO> findByCategory(@RequestParam String category){
+        return inventoryService.findByCategory(category);
     }
 
     @GetMapping(path = "/inventario/estoqueBaixo")
-    public List<InventoryResponseDTO> estoqueBaixo(){
-        return inventoryService.estoqueBaixo();
+    public List<InventoryResponseDTO> findLowStockProducts(){
+        return inventoryService.findLowStockProducts();
     }
 }

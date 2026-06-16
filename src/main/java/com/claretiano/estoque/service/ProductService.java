@@ -7,10 +7,10 @@ import com.claretiano.estoque.response.ProductResponseDTO;
 import java.util.List;
 
 public interface ProductService {
-    ProductResponseDTO criarProduto(ProductRequestDTO productRequestDTO);
-    List<ProductResponseDTO> listarProdutos();
-    ProductResponseDTO atualizar(Long id, ProductRequestDTO product);
-    ProductResponseDTO remover(Long id);
-    ProductResponseDTO buscarProdutoPorId(Long id);
-    List<ProductResponseDTO> buscarProdutoPorNome(String nome);
+    ProductResponseDTO createProduct(ProductRequestDTO productRequestDTO);
+    List<ProductResponseDTO> listAllProducts();
+    ProductResponseDTO updateProduct(Long id, ProductRequestDTO product);
+    ProductResponseDTO removeProduct(Long id);
+    ProductResponseDTO findProductById(Long id);
+    List<ProductResponseDTO> findByName(String name);
 }

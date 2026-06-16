@@ -22,5 +22,5 @@ public class Category {
     private String description;
     @OneToMany(mappedBy = "category")
     private List<Product> products;
-    private String nomeNormalizado;
+    private String nameNormalized;
 }

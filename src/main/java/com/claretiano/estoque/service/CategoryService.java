@@ -7,11 +7,11 @@ import com.claretiano.estoque.response.CategoryResponseDTO;
 import java.util.List;
 
 public interface CategoryService {
-    CategoryResponseDTO criarCategoria(CategoryRequestDTO categoryRequestDTO);
-    List<CategoryResponseDTO> listarCategorias();
-    Category deletarCategoria(Long id);
+    CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO);
+    List<CategoryResponseDTO> listAllCategories();
+    CategoryResponseDTO removeCategories(Long id);
     CategoryResponseDTO findById(Long id);
-    Category buscarPorNome(String nome);
-    List<CategoryResponseDTO> buscarCategoriaPorNome(String nome);
-    CategoryResponseDTO atualizarCategoria(Long id, CategoryRequestDTO categoryRequestDTO);
+    Category findByName(String name);
+    List<CategoryResponseDTO> findCategoryByName(String name);
+    CategoryResponseDTO updateCategory(Long id, CategoryRequestDTO categoryRequestDTO);
 }

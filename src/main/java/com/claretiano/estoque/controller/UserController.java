@@ -22,25 +22,25 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(path = "/admin/user")
-    public List<UserResponseDTO> listarUsuarios(){
-        return userService.listarUsuario();
+    public List<UserResponseDTO> listAllUsers(){
+        return userService.listAllUsers();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(path = "/admin/user/{id}")
-    public ResponseEntity<UserResponseDTO> buscarPorId(@PathVariable Long id){
-        return ResponseEntity.ok(userService.buscarPorId(id));
+    public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id){
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/promover/{id}")
-    public ResponseEntity<UserResponseDTO> promoverParaAdmin(@PathVariable Long id){
-        return ResponseEntity.ok(userService.promoverParaAdmim(id));
+    public ResponseEntity<UserResponseDTO> promoteToAdmin(@PathVariable Long id){
+        return ResponseEntity.ok(userService.promoteToAdmin(id));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/remover/{id}")
-    public ResponseEntity<UserResponseDTO> removerAdmin(@PathVariable Long id){
-        return ResponseEntity.ok(userService.removerAdmin(id));
+    public ResponseEntity<UserResponseDTO> removeAdmin(@PathVariable Long id){
+        return ResponseEntity.ok(userService.removeAdmin(id));
     }
 }

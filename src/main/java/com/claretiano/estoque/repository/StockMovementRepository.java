@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface StockMovementRepository extends JpaRepository<StockMovement, Long>{
-    List<StockMovement> findByProduct_NameContainingIgnoreCase(String productId);
+    List<StockMovement> findByProductNameContainingIgnoreCase(String productName);
 }
